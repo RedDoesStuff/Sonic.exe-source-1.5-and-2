@@ -1689,7 +1689,11 @@ class PlayState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, LOCKON);
 
-		if (curSong.toLowerCase() == 'sunshine')
+		if (curSong.toLowerCase() == 'faker')
+		{
+			fakertransform.setPosition(dad.getGraphicMidpoint().x - 400, dad.getGraphicMidpoint().y - 400);
+		}
+		else if (curSong.toLowerCase() == 'sunshine')
 		{
 			if (FlxG.save.data.vfx)
 			{
