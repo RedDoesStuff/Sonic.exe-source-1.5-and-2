@@ -60,7 +60,7 @@ class TitleState extends MusicBeatState
 		FlxG.worldBounds.set(0, 0);
 
 		#if polymod
-		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
+		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod'], frameworkParams: {}});
 		#end
 
 		#if sys

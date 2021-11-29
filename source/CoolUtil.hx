@@ -1,6 +1,7 @@
 package;
 
 import lime.utils.Assets;
+import flixel.FlxG;
 
 using StringTools;
 
@@ -46,4 +47,15 @@ class CoolUtil
 		}
 		return dumbArray;
 	}
+
+	public static function camLerpShit(ease:Float):Float
+	{
+		return FlxG.elapsed / (1 / 60) * ease;
+	}
+
+	public static function coolLerp(a:Float, b:Float, ratio:Float):Float
+	{
+		return a + camLerpShit(ratio) * (b - a);
+	}
+
 }

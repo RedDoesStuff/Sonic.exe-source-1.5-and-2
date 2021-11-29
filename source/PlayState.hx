@@ -1687,32 +1687,9 @@ class PlayState extends MusicBeatState
 
 		add(camFollow);
 
-		if (curSong.toLowerCase() == 'too-slow')
-		{
-			FlxG.camera.follow(camFollow, LOCKON, 0.05 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()));
-		}
-		else if (curSong.toLowerCase() == 'endless')
-		{
-			FlxG.camera.follow(camFollow, LOCKON, 0.04 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()));
-		}
-		else if (curSong.toLowerCase() == 'cycles')
-		{
-			FlxG.camera.follow(camFollow, LOCKON, 0.08 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()));
-		}
-		else if (curSong.toLowerCase() == 'milk')
-		{
-			FlxG.camera.follow(camFollow, LOCKON, 0.04 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()));
-		}
-		else if (curSong.toLowerCase() == 'faker')
-		{
-			fakertransform.setPosition(dad.getGraphicMidpoint().x - 400, dad.getGraphicMidpoint().y - 400);
-			FlxG.camera.follow(camFollow, LOCKON, 0.04 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()));
-		}
-		else if (curSong.toLowerCase() == 'chaos')
-		{
-			FlxG.camera.follow(camFollow, LOCKON, 0.06 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()));
-		}
-		else if (curSong.toLowerCase() == 'sunshine')
+		FlxG.camera.follow(camFollow, LOCKON);
+
+		if (curSong.toLowerCase() == 'sunshine')
 		{
 			if (FlxG.save.data.vfx)
 			{
@@ -1741,16 +1718,6 @@ class PlayState extends MusicBeatState
 
 				camHUD.setFilters([new ShaderFilter(vcr)]);
 			}
-
-			FlxG.camera.follow(camFollow, LOCKON, 0.06 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()));
-		}
-		else if (curSong.toLowerCase() == 'you-cant-run')
-		{
-			FlxG.camera.follow(camFollow, LOCKON, 0.06 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()));
-		}
-		else if (curSong.toLowerCase() == 'triple-trouble')
-		{
-			FlxG.camera.follow(camFollow, LOCKON, 0.12 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()));
 		}
 		else if (curSong.toLowerCase() == 'black-sun')
 		{
@@ -1763,14 +1730,13 @@ class PlayState extends MusicBeatState
 			add(vgblack);
 			add(tentas);
 			health = 2;
-			FlxG.camera.follow(camFollow, LOCKON, 0.09 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()));
 		}
 		else if (curSong.toLowerCase() == 'too-fest')
 		{
 			camFollow.y = dad.getMidpoint().y + 700;
 			camFollow.x = dad.getMidpoint().x + 700;
-			FlxG.camera.follow(camFollow, LOCKON, 0.05 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()));
 		}
+
 		// FlxG.camera.setScrollBounds(0, FlxG.width, 0, FlxG.height);
 		FlxG.camera.zoom = defaultCamZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
@@ -3878,6 +3844,22 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
+		switch (curSong.toLowerCase())
+		{
+			case 'too-slow' | 'too-fest':
+				FlxG.camera.followLerp = CoolUtil.camLerpShit(0.05);
+			case 'chaos' | 'sunshine' | 'you-cant-run':
+				FlxG.camera.followLerp = CoolUtil.camLerpShit(0.06);
+			case 'cycles':
+				FlxG.camera.followLerp = CoolUtil.camLerpShit(0.08);
+			case 'black-sun':
+				FlxG.camera.followLerp = CoolUtil.camLerpShit(0.09);
+			case 'triple-trouble':
+				FlxG.camera.followLerp = CoolUtil.camLerpShit(0.12);
+			default:
+				FlxG.camera.followLerp = CoolUtil.camLerpShit(0.04);
+		}
+
 		if (curSong == 'chaos' && dad.curCharacter == 'fleetway-extras3' && dad.animation.curAnim.curFrame == 15 && !dodging)
 			health = 0;
 
@@ -4104,8 +4086,8 @@ class PlayState extends MusicBeatState
 			if (tailscircle == 'circling')
 				dad.x += Math.cos(floaty) * 1.3; // math B)
 		}
-		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.50)));
-		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.50)));
+		iconP1.setGraphicSize(Std.int(150 + 0.85 * (iconP1.width - 150)));
+		iconP2.setGraphicSize(Std.int(150 + 0.85 * (iconP2.width - 150)));
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
@@ -4508,8 +4490,8 @@ class PlayState extends MusicBeatState
 
 		if (camZooming)
 		{
-			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, 0.95);
-			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, 0.95);
+			FlxG.camera.zoom = defaultCamZoom + 0.95 * (FlxG.camera.zoom - defaultCamZoom);
+			camHUD.zoom = 1 + 0.95 * (camHUD.zoom - 1);
 		}
 
 		FlxG.watch.addQuick("beatShit", curBeat);
@@ -6153,15 +6135,15 @@ class PlayState extends MusicBeatState
 			{
 				if (isRing && note.noteData != 2 && note.noteType != 3)
 				{
+					combo += 1;
 					if (popup)
 						popUpScore(note);
-					combo += 1;
 				}
 				else if (!isRing && note.noteType != 3)
 				{
+					combo += 1;
 					if (popup)
 						popUpScore(note);
-					combo += 1;
 				}
 			}
 			else
@@ -6373,7 +6355,10 @@ class PlayState extends MusicBeatState
 	override function stepHit()
 	{
 		super.stepHit();
-		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
+
+		if (20 < Math.abs(FlxG.sound.music.time - Conductor.songPosition)
+			|| SONG.needsVoices
+			&& 20 < Math.abs(vocals.time - Conductor.songPosition))
 		{
 			resyncVocals();
 		}
@@ -6803,7 +6788,7 @@ class PlayState extends MusicBeatState
 		{
 			switch (curStep)
 			{
-				case 787, 795, 902, 800, 811, 819, 823, 827, 832, 835, 839, 847, 847:
+				case 787, 795, 902, 800, 811, 819, 823, 827, 832, 835, 839, 847:
 					doStaticSign(0, false);
 					camX = -35;
 				case 768:

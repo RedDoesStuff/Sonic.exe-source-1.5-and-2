@@ -167,7 +167,7 @@ class MainMenuState extends MusicBeatState
 
 		firstStart = false;
 
-		FlxG.camera.follow(camFollow, null, 0.60 * (60 / FlxG.save.data.fpsCap));
+		FlxG.camera.follow(camFollow, null);
 
 		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, gameVer +  (Main.watermarks ? " FNF - " + kadeEngineVer + " Kade Engine" : ""), 12);
 		versionShit.scrollFactor.set();
@@ -196,6 +196,8 @@ class MainMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
+		FlxG.camera.followLerp = CoolUtil.camLerpShit(0.60);
+
 		#if debug
 		if (FlxG.keys.justPressed.R)
 		{
