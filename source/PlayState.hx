@@ -5766,11 +5766,10 @@ class PlayState extends MusicBeatState
 				}
 			}
 		});
-
+		
 		if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && (!holdArray.contains(true) || PlayStateChangeables.botPlay))
 		{
-			if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
-			{
+			if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss') && (boyfriend.animation.curAnim.curFrame >= 10 || boyfriend.animation.curAnim.finished)) {
 				boyfriend.playAnim('idle');
 				bfcamX = 0; // real.
 				bfcamY = 0;
